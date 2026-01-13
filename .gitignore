@@ -6,9 +6,9 @@
 # Logs
 logs
 *.log
-npm-debug.log*
+npm-debug. log*
 pnpm-debug.log*
-yarn-debug.log*
+yarn-debug. log*
 yarn-error.log*
 lerna-debug.log*
 
@@ -21,7 +21,7 @@ lerna-debug.log*
 
 # IDEs and editors
 /.idea
-.project
+. project
 .classpath
 .c9/
 *.launch
@@ -38,9 +38,9 @@ lerna-debug.log*
 # dotenv environment variable files
 .env
 .env.development.local
-.env.test.local
+. env.test.local
 .env.production.local
-.env.local
+.env. local
 
 # temp directory
 .temp
@@ -54,3 +54,11 @@ pids
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Database
+data/*.db
+data/*.sqlite
+data/*.sqlite3
+
+# pnpm specific
+.pnpm-store/
