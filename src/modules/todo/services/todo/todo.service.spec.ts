@@ -168,6 +168,7 @@ describe('TodoService', () => {
       ).rejects.toThrow(ForbiddenException);
     });
 
+    // ✅ NEU:  Teste BEIDE Bedingungen gleichzeitig (Zeile 98!)
     it('should throw ForbiddenException if user tries to access closed todo from another user', async () => {
       const corrId = 100;
       const id = 1;
@@ -180,6 +181,22 @@ describe('TodoService', () => {
       await expect(
         service.findOne(corrId, id, userId, isAdmin),
       ).rejects.toThrow(ForbiddenException);
+    });
+
+    // ✅ NEU: User kann eigenes offenes Todo sehen
+    it('should allow user to access their own open todo', async () => {
+      const corrId = 100;
+      const id = 1;
+      const userId = 1;
+      const isAdmin = false;
+
+      const openTodo = { ...mockTodoEntity, createdById: 1, isClosed: false };
+      mockRepository.findOneBy.mockResolvedValue(openTodo);
+
+      const result = await service.findOne(corrId, id, userId, isAdmin);
+
+      expect(result.id).toBe(1);
+      expect(result.isClosed).toBe(false);
     });
   });
 
@@ -208,6 +225,7 @@ describe('TodoService', () => {
       expect(mockRepository.save).toHaveBeenCalled();
     });
 
+    // ✅ NEU: Admin setzt isClosed auf false
     it('should allow admin to reopen todo', async () => {
       const corrId = 100;
       const id = 1;

@@ -17,16 +17,13 @@ import { TokenInfoDto } from '../../dto/token-info.dto';
 @Injectable()
 export class UserService {
   private readonly logger = new Logger(UserService.name);
+
   constructor(
     @InjectRepository(UserEntity)
     private readonly repo: Repository<UserEntity>,
     private readonly passwordService: PasswordService,
-  ) {
-    // you could add the initial data here, but it's not recommended in the constructor doing some work.
-    // Recommendation: do it after the bootstrap of the application in the main.ts file
-  }
+  ) {}
 
-  // Vorbereitung für Authentifizierung, wir benötigen diese Methode, um einen User anhand des Benutzernamens zu finden und wir benötigen den Hash zurück für die Prüfung
   private async findOneEntityByUsername(corrId: number, username: string) {
     this.logger.verbose(
       `${corrId} ${this.findOneEntityByUsername.name} username: ${username}`,
@@ -65,7 +62,6 @@ export class UserService {
     this.logger.verbose(
       `${corrId} ${this.entityToDto.name} entity: ${JSON.stringify(entity, null, 2)}`,
     );
-    // hint: Rückgabe ohne Password oder PasswordHash
     const dto = {
       id: entity.id,
       username: entity.username,
@@ -83,7 +79,6 @@ export class UserService {
       `${corrId} ${this.create.name} createDto: ${JSON.stringify(createDto, null, 2)}`,
     );
     const createEntity = this.repo.create(createDto);
-    // check if the username not already exists
     const existing = await this.repo.findOneBy({
       username: createDto.username,
     });
@@ -95,7 +90,6 @@ export class UserService {
         `Username ${createDto.username} already exists`,
       );
     }
-    // create the password hash
     createEntity.passwordHash = await this.passwordService.hashPassword(
       corrId,
       createDto.password,
@@ -108,9 +102,7 @@ export class UserService {
 
   async findAll(corrId: number) {
     Logger.verbose(`${corrId} ${this.findAll.name}`, UserService.name);
-    // find all entries
     const arr = await this.repo.find();
-    // convert each entry to a DTO
     return arr.map((e) => this.entityToDto(corrId, e));
   }
 
@@ -124,7 +116,6 @@ export class UserService {
     return this.entityToDto(corrId, findEntity);
   }
 
-  // hint: implements version control
   async replace(
     corrId: number,
     userId: number,
@@ -143,7 +134,6 @@ export class UserService {
       this.logger.debug(`${corrId} ${this.replace.name} id: ${id} not found`);
       throw new NotFoundException(`User ${id} not found`);
     }
-    // check the version
     if (existingEntity.version !== returnDto.version) {
       this.logger.debug(
         `${corrId} ${this.replace.name} id: ${id} version mismatch. Expected ${existingEntity.version} got ${returnDto.version}`,
@@ -161,7 +151,6 @@ export class UserService {
     return this.entityToDto(corrId, replacedEntity);
   }
 
-  // hint: implements last win....
   async update(
     corrId: number,
     userId: number,
@@ -175,7 +164,6 @@ export class UserService {
         2,
       )}`,
     );
-    // only administrators can update users
     const existingEntity = await this.repo.findOneBy({ id });
     if (!existingEntity) {
       this.logger.debug(`${corrId} ${this.update.name} id: ${id} not found`);

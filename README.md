@@ -82,4 +82,12 @@
 
 ## Persönliches Fazit
 
+### Overview
+Während des ganzen Prüfung liefen sehr viele dinge sehr gut. Ich konnte sehr viele Aufgaben schnell ab arbeiten
+und hatte daher auch nicht wirklich einen Zeit stress.
+
+### Was nicht gut lief
+
+
+### Was besonders gut lief
 
