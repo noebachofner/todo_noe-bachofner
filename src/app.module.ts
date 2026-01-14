@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -9,11 +9,15 @@ import { AppService } from './app.service';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: process.env.DB_DATABASE || 'data/todo.db',
-      entities: [__dirname + '/**/*. entity{.ts,.js}'],
-      synchronize: true, // Only Development
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        type: 'sqlite',
+        database: configService.get<string>('DB_DATABASE') || 'data/todo.db',
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        synchronize: true, // Only Development
+      }),
+      inject: [ConfigService],
     }),
   ],
   controllers: [AppController],
