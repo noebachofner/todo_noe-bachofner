@@ -81,7 +81,7 @@
     },
     "collectCoverageFrom": [
       "src/modules/todo/services/todo/todo.service.ts",
-      "src/modules/auth/user/services/password. service.ts",
+      "src/modules/auth/user/services/password.service.ts",
       "src/modules/auth/user/services/user.service.ts"
     ],
     "coverageDirectory": "./coverage",
