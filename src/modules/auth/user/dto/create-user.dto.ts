@@ -19,7 +19,7 @@ export class CreateUserDto {
   @IsLowercase()
   username!: string;
 
-  @ApiProperty({ example: 'user@local.ch' })
+  @ApiProperty({ example: 'user@local.test' })
   @IsString()
   @IsNotEmpty()
   @IsEmail()

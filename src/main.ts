@@ -1,52 +1,62 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
+import { Request, Response } from 'express';
+import * as yaml from 'yaml';
+import { AppModule } from './app.module';
+import { globalPrefix, swaggerInfo, version } from './informations';
 import { HttpMetaInterceptor } from './interceptors/http-meta-interceptor.service.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   const configService = app.get(ConfigService);
 
-  // Globaler Prefix
-  app.setGlobalPrefix('api');
+  const port = configService.get<number>('PORT') || 3000;
+
+  app.useGlobalInterceptors(new HttpMetaInterceptor());
 
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
     }),
   );
 
-  app.useGlobalInterceptors(new HttpMetaInterceptor());
+  app.setGlobalPrefix(globalPrefix);
 
-  // Swagger Configuration
   const config = new DocumentBuilder()
-    .setTitle(configService.get<string>('SWAGGER_TITLE') || 'Todo API')
-    .setDescription(
-      configService.get<string>('SWAGGER_DESCRIPTION') || 'API Description',
-    )
-    .setVersion(configService.get<string>('SWAGGER_VERSION') || '1.0.0')
+    .setTitle(swaggerInfo.title)
+    .setDescription(swaggerInfo.description)
     .setContact(
-      configService.get<string>('SWAGGER_AUTHOR_NAME') || 'Author undefined',
-      configService.get<string>('SWAGGER_AUTHOR_URL') || '',
-      configService.get<string>('SWAGGER_AUTHOR_EMAIL') || '',
+      swaggerInfo.author.name,
+      swaggerInfo.author.url,
+      swaggerInfo.author.email,
     )
+    .setVersion(version)
     .addBearerAuth()
     .build();
-
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup(
-    configService.get<string>('SWAGGER_DOC_PATH') || 'docs',
-    app,
-    document,
-  );
 
-  const port = configService.get<number>('PORT') || 3000;
+  app.use(`/${swaggerInfo.docPath}-json`, (_req: Request, res: Response) =>
+    res.json(document),
+  );
+  app.use(`/${swaggerInfo.docPath}-yaml`, (_req: Request, res: Response) => {
+    res.type('text/yaml').send(yaml.stringify(document));
+  });
+
+  SwaggerModule.setup(swaggerInfo.docPath, app, document);
+
   await app.listen(port);
-  console.log(`Application is running on: http://localhost:${port}/api`);
-  console.log(`Swagger docs available at: http://localhost:${port}/docs`);
+
+  Logger.log(`NEST application successfully started`, bootstrap.name);
+  Logger.debug(
+    `Server in version: ${version} ist jetzt erreichbar unter http://localhost:${port}/${globalPrefix}`,
+    bootstrap.name,
+  );
+  Logger.debug(
+    `Swagger ist jetzt erreichbar unter http://localhost:${port}/${swaggerInfo.docPath}`,
+    bootstrap.name,
+  );
 }
-bootstrap();
+bootstrap().catch((err) => console.error(err));
