@@ -36,49 +36,87 @@
    >text
 
 ## 1. Schritt Projekt Setup (Zeit ca 1h)
-- Neues NestJS Projekt aufsetzen.
+**Geplant:  1h | IST:  1.5h**
+
+- Neues NestJS Projekt aufsetzen. 
 - User & Auth von bestehendem Projekt auf das neue Projekt migrieren.
-- .env Datei anpassen, vorbereiten
-- Globaler Prefix /api setzten
-- Swagger konfigurieren (/docs) und mit persönlichen Daten erweitern.
-- Logging Middleware/Interceptor migrieren.
-- Commit 2: "Initial setup mit Auth/User Migration"
+- . env Datei anpassen, vorbereiten
+- Globaler Prefix /api setzen
+- Swagger konfigurieren (/docs) und mit persönlichen Daten erweitern. 
+- Logging Middleware/Interceptor migrieren. 
+- `informations/` Struktur für Swagger-Config erstellt
+- YAML-Export für OpenAPI-Spec hinzugefügt
+- **Commit:** "Initial setup mit Auth/User Migration und Swagger"
 
-## 2. Datenbank Todo-Entity und Seed-Daten (Zeit ca 1.5h)
+**Abweichung:** +0.5h durch Swagger-Erweiterungen (JSON/YAML-Export, `informations/` Struktur)
+
+---
+
+## 2. Datenbank Todo-Entity und Seed-Daten (Zeit ca 1. 5h)
+**Geplant: 1.5h | IST: 1h**
+
 - SQLite3 Connection anpassen zu data/todo.db
-- TODO Entity erstellen(id, user_id, title, description, isClosed, timestamps)
+- TODO Entity erstellen (id, user_id, title, description, isClosed, timestamps)
 - Relation zu User Entity hinzufügen
-- Seed-Service: 2 User (admin/user) und 4 TODOs beim Start anlegen
-- User-Entity anpassen falls nötig (isAdmin-Field)
-- Testen ob Datenbank korrekt angelegt wird.
+- Seed-Service:  2 User (admin/user) und 4 TODOs beim Start anlegen
+- User-Entity anpassen (isAdmin-Field bereits vorhanden)
+- Testen ob Datenbank korrekt angelegt wird. 
+- **Commit:** "Todo-Entity und Seed-Daten implementiert"
 
-## 3. TODO CRUD Implementation (Zeit ca 2.5h)
+**Abweichung:** -0.5h, da User-Entity bereits vollständig vorhanden war
+
+---
+
+## 3. TODO CRUD Implementation (Zeit ca 2. 5h)
+**Geplant: 2.5h | IST: 3h**
+
 - TODO Module, Controller, Service erstellen
-- DTOs: CreateTodoDto, UpdateTodoAdminDto, ReturnTodoDto mit Validierungen
-- POST /api/todo Todo erstellen (authenticated user)
-- GET /api/todo Liste(User: nur eigene + isClosed=false, Admin: alle)
-- GET /api/todo/:id Einzelne Todos (Berechtigungsprüfung)
-- PATCH /api/todo/:id Update (User: nur eigene + nur isClosed auf true, Admin: alles)
-- DELETE /api/todo:id Löschen (nur Admins)
-- Commit 3: "ToDo CRUD endpoints implementiert"
+- DTOs:  CreateTodoDto, UpdateTodoAdminDto, UpdateTodoDto, ReturnTodoDto mit Validierungen
+- POST /api/todo - Todo erstellen (authenticated user)
+- GET /api/todo - Liste (User:  nur eigene + isClosed=false, Admin: alle)
+- GET /api/todo/:id - Einzelne Todos (Berechtigungsprüfung)
+- PATCH /api/todo/:id - Update (User: nur eigene + nur isClosed auf true, Admin: alles)
+- DELETE /api/todo/:id - Löschen (nur Admins)
+- Guards für JWT-Auth und Admin-Rechte implementiert
+- **Commit:** "Todo CRUD endpoints implementiert"
+
+**Abweichung:** +0.5h durch komplexe Berechtigungslogik (User vs.  Admin, isClosed-Validierung)
+
+---
 
 ## 4. Validierung, Swagger & Postman Test (Zeit ca 2h)
+**Geplant: 2h | IST:  1. 5h**
+
 - Alle Validierungen prüfen (title 8-50 Zeichen, description optional)
 - Swagger Decorators für alle Todo-Endpoints (@ApiOperation, @ApiResponse)
 - Alle DTOs mit @ApiProperty und Beispielwerten versehen
 - HTTP Status-Codes prüfen (200, 201, 400, 401, 403, 404, 409)
-- Postman Collection importieren und durchlaufen lassen
-- Fehler beheben bis alle Tests grün sind
+- Manuelle Tests mit Swagger UI durchgeführt
+- Fehler beheben bis alle Endpoints korrekt funktionieren
+- **Commit:** "Validierungen und Swagger-Dokumentation vervollständigt"
 
-## Unit Tests und Finalisierung (Zeit ca 1h)
+**Abweichung:** -0.5h, da Swagger bereits im Setup gut vorbereitet wurde
+
+---
+
+## 5. Unit Tests und Finalisierung (Zeit ca 1h)
+**Geplant: 1h | IST: 2. 5h**
+
 - Unit Tests für TodoService schreiben (100% Coverage)
-- Falls Zeit: Unit-Tests für AuthService und PasswordService
-- pnpm run format && pnpm run lint
-- pnpm run test: cov - Coverage prüfen
-- pnpm run build
-- Fazit ins README.md schreiben (Was gut, was schwierig)
-- Zippen ohne node_modules, Ohne dist, mit .git)
+- Unit-Tests für UserService (100% Coverage)
+- Unit-Tests für PasswordService (100% Coverage)
+- Coverage-Konfiguration in `package.json` angepasst
+- Edge Cases für Branch Coverage identifiziert und getestet
+- `pnpm run format` ausgeführt
+- `pnpm run lint` ausgeführt und Fehler behoben
+- `pnpm run test:cov` - **100% Statement, Branch, Function & Line Coverage erreicht**
+- `pnpm run build` erfolgreich
+- README.md mit Fazit aktualisiert
+- **Commit:** "Unit Tests mit 100% Coverage und finale Dokumentation"
 
+**Abweichung:** +1. 5h durch aufwändige Branch-Coverage-Optimierung (insbesondere Berechtigungslogik in `findOne` und `update`)
+
+---
 
 ## Persönliches Fazit
 
