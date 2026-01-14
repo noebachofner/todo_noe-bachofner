@@ -100,6 +100,8 @@ export class UserService {
       corrId,
       createDto.password,
     );
+    createEntity.createdById = userId;
+    createEntity.updatedById = userId;
     const savedEntity = await this.repo.save(createEntity);
     return this.entityToDto(corrId, savedEntity);
   }
@@ -141,7 +143,15 @@ export class UserService {
       this.logger.debug(`${corrId} ${this.replace.name} id: ${id} not found`);
       throw new NotFoundException(`User ${id} not found`);
     }
-
+    // check the version
+    if (existingEntity.version !== returnDto.version) {
+      this.logger.debug(
+        `${corrId} ${this.replace.name} id: ${id} version mismatch. Expected ${existingEntity.version} got ${returnDto.version}`,
+      );
+      throw new ConflictException(
+        `User ${id} version mismatch, expected ${existingEntity.version} got ${returnDto.version}`,
+      );
+    }
     const replacedEntity = await this.repo.save({
       ...existingEntity,
       ...returnDto,
@@ -174,6 +184,7 @@ export class UserService {
     const updatedEntity = await this.repo.save({
       ...existingEntity,
       ...updateUserAdminDto,
+      updatedById: userId,
       id,
     });
     return this.entityToDto(corrId, updatedEntity);

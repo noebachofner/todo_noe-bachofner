@@ -27,37 +27,41 @@ export class TodoSeedService implements OnApplicationBootstrap {
     const demoTodos = [
       {
         id: 1,
-        userId: 1,
         title: 'Open admin',
         description: 'Example of an open admin todo',
         isClosed: false,
+        createdById: 1,
+        updatedById: 1,
       },
       {
         id: 2,
-        userId: 1,
         title: 'Closed admin',
         description: 'Example of a closed admin todo',
         isClosed: true,
+        createdById: 1,
+        updatedById: 1,
       },
       {
         id: 3,
-        userId: 2,
         title: 'Open user',
         description: 'Example of an open user todo',
         isClosed: false,
+        createdById: 2,
+        updatedById: 2,
       },
       {
         id: 4,
-        userId: 2,
         title: 'Closed user',
         description: 'Example of a closed user todo',
         isClosed: true,
+        createdById: 2,
+        updatedById: 2,
       },
     ];
 
     for (const todo of demoTodos) {
       this.logger.verbose(
-        `${this.seed.name}: Creating todo id=${todo.id}, userId=${todo.userId}, title=${todo.title}`,
+        `${this.seed.name}: Creating todo id=${todo.id}, createdById=${todo.createdById}, title=${todo.title}`,
       );
       await todoRepo.save(todoRepo.create(todo));
     }

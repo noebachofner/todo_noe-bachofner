@@ -5,8 +5,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { TodoEntity } from '../../entities/todo.entity';
+import { Repository } from 'typeorm';
 import {
   CreateTodoDto,
   ReturnTodoDto,
@@ -25,16 +25,17 @@ export class TodoService {
 
   private entityToDto(corrId: number, entity: TodoEntity): ReturnTodoDto {
     this.logger.verbose(
-      `${corrId} ${this.entityToDto.name} entity:  ${JSON.stringify(entity, null, 2)}`,
+      `${corrId} ${this.entityToDto.name} entity: ${JSON.stringify(entity, null, 2)}`,
     );
     return {
       id: entity.id,
-      userId: entity.userId,
       title: entity.title,
       description: entity.description,
       isClosed: entity.isClosed,
-      createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
+      createdById: entity.createdById,
+      updatedById: entity.updatedById,
+      createdAt: entity.createdAt.toISOString(),
+      updatedAt: entity.updatedAt.toISOString(),
     };
   }
 
@@ -48,7 +49,8 @@ export class TodoService {
     );
     const entity = this.repo.create({
       ...createDto,
-      userId,
+      createdById: userId,
+      updatedById: userId,
     });
     const saved = await this.repo.save(entity);
     return this.entityToDto(corrId, saved);
@@ -60,18 +62,16 @@ export class TodoService {
     isAdmin: boolean,
   ): Promise<ReturnTodoDto[]> {
     this.logger.verbose(
-      `${corrId} ${this.findAll.name} userId: ${userId}, isAdmin:  ${isAdmin}`,
+      `${corrId} ${this.findAll.name} userId: ${userId}, isAdmin: ${isAdmin}`,
     );
 
     let todos: TodoEntity[];
 
     if (isAdmin) {
-      // Admin:  alle Todos zurückgeben
       todos = await this.repo.find();
     } else {
-      // User: nur eigene Todos mit isClosed=false
       todos = await this.repo.find({
-        where: { userId, isClosed: false },
+        where: { createdById: userId, isClosed: false },
       });
     }
 
@@ -85,7 +85,7 @@ export class TodoService {
     isAdmin: boolean,
   ): Promise<ReturnTodoDto> {
     this.logger.verbose(
-      `${corrId} ${this.findOne.name} id: ${id}, userId:  ${userId}, isAdmin: ${isAdmin}`,
+      `${corrId} ${this.findOne.name} id: ${id}, userId: ${userId}, isAdmin:  ${isAdmin}`,
     );
 
     const entity = await this.repo.findOneBy({ id });
@@ -94,9 +94,8 @@ export class TodoService {
       throw new NotFoundException(`Todo ${id} not found`);
     }
 
-    // User:  nur eigene Todos mit isClosed=false
     if (!isAdmin) {
-      if (entity.userId !== userId || entity.isClosed) {
+      if (entity.createdById !== userId || entity.isClosed) {
         throw new ForbiddenException('Access denied');
       }
     }
@@ -121,9 +120,8 @@ export class TodoService {
       throw new NotFoundException(`Todo ${id} not found`);
     }
 
-    // User: nur eigene Todos ändern, nur isClosed auf true setzen
     if (!isAdmin) {
-      if (entity.userId !== userId) {
+      if (entity.createdById !== userId) {
         throw new ForbiddenException('Access denied');
       }
 
@@ -134,10 +132,11 @@ export class TodoService {
 
       entity.isClosed = true;
     } else {
-      // Admin: alles ändern
-      Object.assign(entity, updateDto);
+      const adminUpdate = updateDto as UpdateTodoAdminDto;
+      entity.isClosed = adminUpdate.isClosed;
     }
 
+    entity.updatedById = userId;
     const saved = await this.repo.save(entity);
     return this.entityToDto(corrId, saved);
   }

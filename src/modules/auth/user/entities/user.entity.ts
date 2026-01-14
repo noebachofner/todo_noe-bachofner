@@ -4,6 +4,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
+  VersionColumn,
 } from 'typeorm';
 
 @Entity('user')
@@ -17,15 +18,24 @@ export class UserEntity {
   @Column({ type: 'varchar' })
   email: string;
 
-  @Column({ type: 'varchar', name: 'password' })
+  @Column({ type: 'varchar', name: 'password_hash' })
   passwordHash: string;
 
-  @Column({ type: 'boolean', default: false })
+  @Column({ type: 'boolean', name: 'is_admin', default: false })
   isAdmin: boolean;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
+  @VersionColumn()
+  version: number;
+
+  @Column({ name: 'created_by_id', nullable: true })
+  createdById: number;
+
+  @Column({ name: 'updated_by_id', nullable: true })
+  updatedById: number;
 }

@@ -4,9 +4,6 @@ export class ReturnTodoDto {
   @ApiProperty({ example: 1 })
   id: number;
 
-  @ApiProperty({ example: 1 })
-  userId: number;
-
   @ApiProperty({ example: 'Buy groceries' })
   title: string;
 
@@ -16,9 +13,15 @@ export class ReturnTodoDto {
   @ApiProperty({ example: false })
   isClosed: boolean;
 
-  @ApiProperty({ example: '2026-01-14T09:00:00.000Z' })
-  createdAt: Date;
+  @ApiProperty({ example: 1 })
+  createdById: number;
+
+  @ApiProperty({ example: 1 })
+  updatedById: number;
 
   @ApiProperty({ example: '2026-01-14T09:00:00.000Z' })
-  updatedAt: Date;
+  createdAt: string;
+
+  @ApiProperty({ example: '2026-01-14T09:00:00.000Z' })
+  updatedAt: string;
 }
