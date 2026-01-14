@@ -145,6 +145,7 @@ export class TodoService {
     corrId: number,
     id: number,
     isAdmin: boolean,
+    userId: number,
   ): Promise<ReturnTodoDto> {
     this.logger.verbose(
       `${corrId} ${this.remove.name} id: ${id}, isAdmin: ${isAdmin}`,
@@ -161,6 +162,7 @@ export class TodoService {
     }
 
     await this.repo.remove(entity);
+    entity.updatedById = userId;
     return this.entityToDto(corrId, entity);
   }
 }

@@ -27,7 +27,7 @@ export class TodoSeedService implements OnApplicationBootstrap {
     const demoTodos = [
       {
         id: 1,
-        title: 'Open admin',
+        title: 'OpenAdmin',
         description: 'Example of an open admin todo',
         isClosed: false,
         createdById: 1,
@@ -35,7 +35,7 @@ export class TodoSeedService implements OnApplicationBootstrap {
       },
       {
         id: 2,
-        title: 'Closed admin',
+        title: 'ClosedAdmin',
         description: 'Example of a closed admin todo',
         isClosed: true,
         createdById: 1,
@@ -43,7 +43,7 @@ export class TodoSeedService implements OnApplicationBootstrap {
       },
       {
         id: 3,
-        title: 'Open user',
+        title: 'OpenUser',
         description: 'Example of an open user todo',
         isClosed: false,
         createdById: 2,
@@ -51,7 +51,7 @@ export class TodoSeedService implements OnApplicationBootstrap {
       },
       {
         id: 4,
-        title: 'Closed user',
+        title: 'ClosedUser',
         description: 'Example of a closed user todo',
         isClosed: true,
         createdById: 2,

@@ -184,10 +184,11 @@ export class TodoController {
     @CorrId() corrId: number,
     @Param('id', ParseIntPipe) id: number,
     @IsAdmin() isAdmin: boolean,
+    @UserId() userId: number,
   ) {
     this.logger.log(
       `${corrId} ${this.remove.name} id: ${id}, isAdmin: ${isAdmin}`,
     );
-    return this.todoService.remove(corrId, id, isAdmin);
+    return this.todoService.remove(corrId, id, isAdmin, userId);
   }
 }
