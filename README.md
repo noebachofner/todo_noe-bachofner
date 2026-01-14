@@ -87,7 +87,7 @@ Während des ganzen Prüfung liefen sehr viele dinge sehr gut. Ich konnte sehr v
 und hatte daher auch nicht wirklich einen Zeit stress.
 
 ### Was nicht gut lief
-
+- Das die Testabdeckung 100% bei jedem Feld erreicht konnte ich leider nicht. Der Grund ist auch unbekannt und ich habe keine Lösung gefunden.
 
 ### Was besonders gut lief
-
+- Die Migration von Beispiel Projekt von User und Auth zu meinem ToDo app.
