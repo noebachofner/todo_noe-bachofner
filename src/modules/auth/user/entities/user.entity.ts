@@ -4,7 +4,6 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-  VersionColumn,
 } from 'typeorm';
 
 @Entity('user')
@@ -18,7 +17,7 @@ export class UserEntity {
   @Column({ type: 'varchar' })
   email: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: 'varchar', name: 'password' })
   passwordHash: string;
 
   @Column({ type: 'boolean', default: false })
@@ -29,13 +28,4 @@ export class UserEntity {
 
   @UpdateDateColumn()
   updatedAt: Date;
-
-  @VersionColumn()
-  version: number;
-
-  @Column()
-  createdById: number;
-
-  @Column()
-  updatedById: number;
 }

@@ -46,19 +46,4 @@ export class ReturnUserDto {
   @IsDate()
   @IsNotEmpty()
   updatedAt!: Date;
-
-  @ApiProperty({ example: 0 })
-  @IsNumber()
-  @IsNotEmpty()
-  version!: number;
-
-  @ApiProperty({ example: 0 })
-  @IsNumber()
-  @IsNotEmpty()
-  createdById!: number;
-
-  @ApiProperty({ example: 0 })
-  @IsNumber()
-  @IsNotEmpty()
-  updatedById!: number;
 }

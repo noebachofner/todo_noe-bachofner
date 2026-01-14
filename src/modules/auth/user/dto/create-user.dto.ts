@@ -32,8 +32,8 @@ export class CreateUserDto {
   @Matches(/(?=.*[a-z])/, {
     message: 'Password must contain a lowercase letter',
   })
-  @Matches(/(?=.*[A-Z])/, {
-    message: 'Password must contain an uppercase letter',
+  @Matches(/(?=.*[A-Z].*[A-Z])/, {
+    message: 'Password must contain at least 2 uppercase letters',
   })
   @Matches(/(?=.*\d)/, {
     message: 'Password must contain a number',
