@@ -124,8 +124,14 @@
 Während des ganzen Prüfung liefen sehr viele dinge sehr gut. Ich konnte sehr viele Aufgaben schnell ab arbeiten
 und hatte daher auch nicht wirklich einen Zeit stress.
 
-### Was nicht gut lief
-- Das die Testabdeckung 100% bei jedem Feld erreicht konnte ich leider nicht. Der Grund ist auch unbekannt und ich habe keine Lösung gefunden.
+### Was nicht gut lief / herausfordernd war
+- Branch Coverage mit 100% war nicht erreichbar, grund leider umbekannt.
+- Die Berechtigungslogik (Admin vs.  User, isClosed-Kombinationen) erforderte viele Edge-Case-Tests
 
 ### Was besonders gut lief
-- Die Migration von Beispiel Projekt von User und Auth zu meinem ToDo app.
+- TypeORM Integration und Entity-Relations (User ↔ Todo) funktionierten reibungslos
+- JWT-Authentifizierung mit Guards war schnell implementiert
+- Migration von User & Auth aus bestehendem Projekt sparte viel Zeit
+- Swagger-Dokumentation mit JSON/YAML-Export ist vollständig und professionell
+- 100% Test Coverage für alle Services erreicht (Statement, Function, Line)
+- Logging mit Interceptor und Correlation-IDs macht Debugging sehr einfach
